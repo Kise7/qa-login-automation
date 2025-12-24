@@ -14,7 +14,6 @@ namespace AutomationTests
         private const string LoginUrl = "https://www.google.com/"; 
 
         private IWebElement textArea  => _driver.FindElement(By.XPath("//*[@name='q']"));
-        //private IWebElement allTab  => _driver.FindElement(By.XPath("//span[text()='All']"));
         
         [SetUp]
         public void Setup()
@@ -38,68 +37,18 @@ namespace AutomationTests
             page.GoTo();
 
             page.Search("simplespace");
-            
+
+            var wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(60));
+            wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("//span[text()='All']")));
+            IWebElement aiMode = wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("//span[@class='R1QWuf']")));
             string actualText = textArea.GetAttribute("value");
-            //string verifyAllTab = "All";
-            var wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(10));
-            IWebElement allTab = wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("//span[text()='All']")));
 
+            //Verify value on search bar
             Assert.That(actualText, Is.EqualTo("simplespace"));
-            Assert.That(allTab.Text, Is.EqualTo("All"));
 
-            //Assert.That(currentURL, Does.Contain("/searchhh"), "User should be redirected to list.");
+            //Verify "AI Mode" tab
+            Assert.That(aiMode.Text, Is.EqualTo("AI Mode"));
         }
-        
-        // public void ValidLogin_RedirectsToDashboard()
-        // {
-        //     var page = new LoginPage(_driver, LoginUrl);
-        //     page.GoTo();
-
-        //     page.Login("testuser", "password123");
-
-        //     Assert.That(_driver.Url, Does.Contain("/dashboard"), "User should be redirected to dashboard.");
-        // }
-
-        // [Test]
-        // public void InvalidLogin_ShowsErrorMessage()
-        // {
-        //     var page = new LoginPage(_driver, LoginUrl);
-        //     page.GoTo();
-
-        //     page.Login("wronguser", "wrongpass");
-
-        //     Assert.That(page.GetErrorText(), Is.EqualTo("Invalid credentials"), "Error message should be visible.");
-        // }
-
-        // [Test]
-        // public void EmptyFields_ShowsValidation()
-        // {
-        //     var page = new LoginPage(_driver, LoginUrl);
-        //     page.GoTo();
-
-        //     page.Login("", "");
-
-        //     // Example: check client-side validation
-        //     var userAria = _driver.FindElement(By.Id("username")).GetAttribute("aria-invalid");
-        //     var passAria = _driver.FindElement(By.Id("password")).GetAttribute("aria-invalid");
-
-        //     Assert.That(userAria, Is.EqualTo("true"));
-        //     Assert.That(passAria, Is.EqualTo("true"));
-        // }
     }
 
 }
-
-// public class Tests
-// {
-//     [SetUp]
-//     public void Setup()
-//     {
-//     }
-
-//     [Test]
-//     public void Test1()
-//     {
-//         Assert.Pass();
-//     }
-// }
